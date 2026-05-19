@@ -132,6 +132,7 @@
         // Estado da aplicação
         let produtos = [];
         let currentCategory = "Todos";
+        let defaultCategories = ["Recomendações", "Acessórios para Veículos", "Casa, Móveis e Decoração", "Ferramentas", "Calçados, Roupas e Bolsas", "Esportes e Fitness", "Construção", "Eletrodomésticos", "Beleza e Cuidado Pessoal", "Saúde", "Joias e Relógios", "Informática", "Arte, Papelaria e Armarinho", "Brinquedos e Hobbies", "Indústria e Comércio", "Celulares e Telefones", "Agro", "Alimentos e Bebidas", "Bebês", "Eletrônicos, Áudio e Vídeo", "Pet Shop", "Festas e Lembrancinhas", "Câmeras e Acessórios", "Instrumentos Musicais", "Games", "Antiguidades e Coleções", "Livros, Revistas e Comics", "Outros"];
 
         // DOM Elements
         const gridContainer = document.getElementById('product-grid');
@@ -171,9 +172,15 @@
         const getCategories = () => {
             const categories = new Set();
             categories.add("Todos");
+            
+            // Adiciona as categorias que tem produtos atrelados
             produtos.forEach(p => {
                 if(p.categoria) categories.add(p.categoria);
             });
+
+            // Se você quiser mostrar TODAS as categorias da lista, mesmo as vazias, descomente a linha abaixo e comente o forEach acima.
+            // defaultCategories.forEach(cat => categories.add(cat));
+
             return Array.from(categories);
         };
 
