@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compara Preço Brasil | As Melhores Ofertas</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind Config Customization -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar for categories */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        
+        /* Line clamp for titles */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;  
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <div class="bg-brand-600 text-white p-1.5 rounded-lg">
+                        <i class="ph ph-shopping-cart text-xl"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-gray-900">Compara Preço <span class="text-2xl">🇧🇷</span></span>
+                </div>
+                <!-- Trust Badge -->
+                <div class="hidden sm:flex items-center gap-2 text-sm text-green-600 font-medium bg-green-50 px-3 py-1 rounded-full border border-green-100">
+                    <i class="ph-fill ph-shield-check text-lg"></i>
+                    Ofertas Verificadas
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Categories Filter -->
+    <div class="bg-white border-b border-gray-200 shadow-sm z-40 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex space-x-2 overflow-x-auto py-3 no-scrollbar" id="category-filters">
+                <!-- Categories will be injected here via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div class="mb-6 flex justify-between items-end">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900" id="page-title">Todas as Ofertas</h1>
+                <p class="text-sm text-gray-500 mt-1" id="products-count">Carregando...</p>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6" id="product-grid">
+            <!-- Products will be injected here via JS -->
+        </div>
+        
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden flex-col items-center justify-center py-20 text-center">
+            <i class="ph ph-magnifying-glass text-6xl text-gray-300 mb-4"></i>
+            <h3 class="text-lg font-medium text-gray-900">Nenhuma oferta encontrada</h3>
+            <p class="text-gray-500">Tente selecionar outra categoria.</p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="md:flex md:items-center md:justify-between text-center md:text-left">
+                <div class="flex justify-center md:justify-start items-center gap-2 mb-4 md:mb-0">
+                    <i class="ph-fill ph-tag text-brand-600 text-xl"></i>
+                    <span class="font-bold text-gray-900">Compara Preço Brasil</span>
+                </div>
+                <p class="text-sm text-gray-500">
+                    &copy; 2026. Todos os direitos reservados. Os preços podem sofrer alterações no site oficial.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Estado da aplicação
+        let produtos = [];
+        let currentCategory = "Todos";
+
+        // DOM Elements
+        const gridContainer = document.getElementById('product-grid');
+        const filtersContainer = document.getElementById('category-filters');
+        const pageTitle = document.getElementById('page-title');
+        const productsCount = document.getElementById('products-count');
+        const emptyState = document.getElementById('empty-state');
+
+        // Carregar dados do arquivo JSON
+        const carregarProdutos = async () => {
+            try {
+                const response = await fetch('p.json');
+                if (!response.ok) throw new Error('Falha ao carregar o arquivo p.json');
+                
+                const data = await response.json();
+                
+                // Filtra apenas links Meli.la e remove dados sensíveis para segurança adicional
+                produtos = data
+                    .filter(p => p.linkCurtoAfiliado && p.linkCurtoAfiliado.startsWith('https://meli.la/'))
+                    .map(p => {
+                        // Deleta os dados sensíveis instantaneamente após o carregamento
+                        delete p.comissaoPorcentagem;
+                        delete p.lucroReaisComZeros;
+                        return p;
+                    });
+
+                renderFilters();
+                renderProducts();
+            } catch (error) {
+                console.error('Erro:', error);
+                productsCount.textContent = "Erro ao carregar produtos.";
+                gridContainer.innerHTML = '<div class="col-span-full text-center text-red-500 py-10 bg-red-50 rounded-xl border border-red-200">Não foi possível carregar as ofertas. <br><br>Verifique se o arquivo <b>p.json</b> está na mesma pasta. <br><span class="text-sm text-gray-600">Nota: Navegadores bloqueiam requisições de arquivos locais por segurança. Você precisa abrir o arquivo usando um servidor local (ex: extensão "Live Server" no VSCode).</span></div>';
+            }
+        };
+
+        // Obter categorias únicas
+        const getCategories = () => {
+            const categories = new Set();
+            categories.add("Todos");
+            produtos.forEach(p => {
+                if(p.categoria) categories.add(p.categoria);
+            });
+            return Array.from(categories);
+        };
+
+        // Renderizar botões de filtro
+        const renderFilters = () => {
+            const categories = getCategories();
+            filtersContainer.innerHTML = '';
+            
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                const isActive = currentCategory === cat;
+                
+                btn.className = `whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 border ${
+                    isActive 
+                    ? 'bg-brand-600 text-white border-brand-600 shadow-md transform scale-105' 
+                    : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                }`;
+                btn.textContent = cat;
+                
+                btn.onclick = () => {
+                    currentCategory = cat;
+                    renderFilters(); // Atualiza cores dos botões
+                    renderProducts(); // Atualiza a grid
+                };
+                
+                filtersContainer.appendChild(btn);
+            });
+        };
+
+        // Formatar o badge de destaque
+        const getBadgeHtml = (destaque, desconto) => {
+            let badges = '';
+            
+            if (destaque) {
+                let bgClass = "bg-orange-500";
+                if(destaque.includes("IMPERDÍVEL")) bgClass = "bg-purple-600";
+                
+                badges += `<span class="${bgClass} text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1 w-max">
+                    <i class="ph-fill ph-star"></i> ${destaque}
+                </span>`;
+            }
+            
+            if (desconto) {
+                badges += `<span class="bg-green-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm w-max">
+                    ↓ ${desconto}
+                </span>`;
+            }
+            
+            return badges ? `<div class="absolute top-3 left-3 flex flex-col gap-1.5 z-10">${badges}</div>` : '';
+        };
+
+        // Renderizar Produtos
+        const renderProducts = () => {
+            // Filtrar
+            const filteredProducts = currentCategory === "Todos" 
+                ? produtos 
+                : produtos.filter(p => p.categoria === currentCategory);
+
+            // Atualizar textos da página
+            pageTitle.textContent = currentCategory === "Todos" ? "Todas as Ofertas" : `Ofertas em ${currentCategory}`;
+            productsCount.textContent = `${filteredProducts.length} ${filteredProducts.length === 1 ? 'produto encontrado' : 'produtos encontrados'}`;
+
+            // Estado vazio
+            if (filteredProducts.length === 0) {
+                gridContainer.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+                return;
+            } else {
+                gridContainer.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+                emptyState.classList.remove('flex');
+            }
+
+            // Gerar HTML
+            gridContainer.innerHTML = filteredProducts.map(produto => {
+                
+                // Formatação de Preços
+                let priceHtml = '';
+                if (produto.precoAntigoCortado) {
+                    priceHtml += `<span class="text-xs text-gray-400 line-through decoration-gray-300">R$ ${produto.precoAntigoCortado}</span>`;
+                }
+                
+                priceHtml += `
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-sm font-semibold text-gray-900">R$</span>
+                        <span class="text-2xl font-extrabold text-gray-900 tracking-tight">${produto.precoAtual}</span>
+                    </div>
+                `;
+
+                // Formatação de Parcelamento
+                let parcelamentoHtml = produto.parcelamento 
+                    ? `<p class="text-xs font-semibold text-green-600 mt-0.5"><i class="ph ph-credit-card mr-1"></i>${produto.parcelamento}</p>` 
+                    : '<p class="text-xs text-gray-400 mt-0.5 h-4"></p>'; // placeholder para manter alinhamento
+
+                // Estrelas e Vendas
+                let ratingHtml = '';
+                if(produto.estrelas || produto.qtdVendas) {
+                    ratingHtml = `<div class="flex items-center gap-2 text-xs text-gray-500 mb-2 mt-auto pt-3">`;
+                    if(produto.estrelas) {
+                        ratingHtml += `<div class="flex items-center text-yellow-500 font-bold"><i class="ph-fill ph-star mr-1"></i>${produto.estrelas}</div>`;
+                    }
+                    if(produto.estrelas && produto.qtdVendas) ratingHtml += `<span class="text-gray-300">|</span>`;
+                    if(produto.qtdVendas) {
+                        ratingHtml += `<span>${produto.qtdVendas}</span>`;
+                    }
+                    ratingHtml += `</div>`;
+                }
+
+                // Imagem de fallback caso nula
+                const imgSrc = produto.linkImagem || "https://placehold.co/400x400/f3f4f6/a1a1aa?text=Sem+Foto";
+
+                return `
+                    <a href="${produto.linkCurtoAfiliado}" target="_blank" rel="noopener noreferrer" class="group bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full relative cursor-pointer block hover:-translate-y-1">
+                        
+                        ${getBadgeHtml(produto.tagDestaque, produto.descontoSite)}
+                        
+                        <div class="w-full bg-white rounded-xl mb-4 p-2 flex items-center justify-center overflow-hidden h-48">
+                            <img src="${imgSrc}" alt="${produto.titulo}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" loading="lazy" onerror="this.src='https://placehold.co/400x400/f3f4f6/a1a1aa?text=Imagem+Indisponível'" />
+                        </div>
+                        
+                        <h3 class="text-sm font-medium text-gray-800 leading-tight line-clamp-2 mb-1 group-hover:text-brand-600 transition-colors" title="${produto.titulo}">
+                            ${produto.titulo}
+                        </h3>
+                        
+                        ${ratingHtml}
+                        
+                        <div class="mt-1 flex flex-col">
+                            ${priceHtml}
+                            ${parcelamentoHtml}
+                        </div>
+                        
+                        <button class="w-full mt-4 bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                            Ver Oferta <i class="ph-bold ph-arrow-right"></i>
+                        </button>
+                    </a>
+                `;
+            }).join('');
+        };
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarProdutos();
+        });
+    </script>
+</body>
+</html>
