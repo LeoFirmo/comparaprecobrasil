@@ -83,6 +83,22 @@
 
     <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
+        <div class="mb-8 relative max-w-2xl mx-auto">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <i class="ph ph-magnifying-glass text-gray-400 text-xl"></i>
+            </div>
+            <input 
+                type="text" 
+                id="search-input" 
+                class="block w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-2xl leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 sm:text-base transition-all shadow-sm hover:shadow-md" 
+                placeholder="Busque por produtos, marcas, modelos..."
+                autocomplete="off"
+            >
+            <button id="clear-search" class="absolute inset-y-0 right-0 pr-4 flex items-center hidden text-gray-400 hover:text-gray-600 transition-colors">
+                <i class="ph-fill ph-x-circle text-xl"></i>
+            </button>
+        </div>
+
         <div class="mb-6 flex justify-between items-end">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900" id="page-title">Todas as Ofertas</h1>
@@ -96,7 +112,7 @@
         <div id="empty-state" class="hidden flex-col items-center justify-center py-20 text-center">
             <i class="ph ph-magnifying-glass text-6xl text-gray-300 mb-4"></i>
             <h3 class="text-lg font-medium text-gray-900">Nenhuma oferta encontrada</h3>
-            <p class="text-gray-500">Tente selecionar outra categoria.</p>
+            <p class="text-gray-500 mt-1" id="empty-state-message">Tente buscar com outros termos ou selecione outra categoria.</p>
         </div>
 
     </main>
@@ -120,7 +136,7 @@
         // Estado da aplicação
         let produtos = [];
         let currentCategory = "Todos";
-        let defaultCategories = ["Recomendações", "Acessórios para Veículos", "Casa, Móveis e Decoração", "Ferramentas", "Calçados, Roupas e Bolsas", "Esportes e Fitness", "Construção", "Eletrodomésticos", "Beleza e Cuidado Pessoal", "Saúde", "Joias e Relógios", "Informática", "Arte, Papelaria e Armarinho", "Brinquedos e Hobbies", "Indústria e Comércio", "Celulares e Telefones", "Agro", "Alimentos e Bebidas", "Bebês", "Eletrônicos, Áudio e Vídeo", "Pet Shop", "Festas e Lembrancinhas", "Câmeras e Acessórios", "Instrumentos Musicais", "Games", "Antiguidades e Coleções", "Livros, Revistas e Comics", "Outros"];
+        let searchQuery = ""; // Armazena a busca atual
 
         // DOM Elements
         const gridContainer = document.getElementById('product-grid');
@@ -128,6 +144,8 @@
         const pageTitle = document.getElementById('page-title');
         const productsCount = document.getElementById('products-count');
         const emptyState = document.getElementById('empty-state');
+        const searchInput = document.getElementById('search-input');
+        const clearSearchBtn = document.getElementById('clear-search');
 
         // Carregar dados do arquivo JSON
         const carregarProdutos = async () => {
@@ -137,11 +155,10 @@
                 
                 const data = await response.json();
                 
-                // Filtra apenas links Meli.la e remove dados sensíveis para segurança adicional
+                // Filtra apenas links Meli.la e remove dados sensíveis
                 produtos = data
                     .filter(p => p.linkCurtoAfiliado && p.linkCurtoAfiliado.startsWith('https://meli.la/'))
                     .map(p => {
-                        // Deleta os dados sensíveis instantaneamente após o carregamento
                         delete p.comissaoPorcentagem;
                         delete p.lucroReaisComZeros;
                         return p;
@@ -152,16 +169,44 @@
             } catch (error) {
                 console.error('Erro:', error);
                 productsCount.textContent = "Erro ao carregar produtos.";
-                gridContainer.innerHTML = '<div class="col-span-full text-center text-red-500 py-10 bg-red-50 rounded-xl border border-red-200">Não foi possível carregar as ofertas. <br><br>Verifique se o arquivo <b>p.json</b> está na mesma pasta. <br><span class="text-sm text-gray-600">Nota: Navegadores bloqueiam requisições de arquivos locais por segurança. Você precisa abrir o arquivo usando um servidor local (ex: extensão "Live Server" no VSCode).</span></div>';
+                gridContainer.innerHTML = '<div class="col-span-full text-center text-red-500 py-10 bg-red-50 rounded-xl border border-red-200">Não foi possível carregar as ofertas. <br><br>Verifique se o arquivo <b>p.json</b> está na mesma pasta.</div>';
             }
         };
+
+        // Função utilitária para normalizar strings (remove acentos e deixa minúsculo)
+        const normalizeString = (str) => {
+            if (!str) return "";
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+        };
+
+        // Lidar com a busca
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            
+            // Mostrar/Ocultar botão de limpar
+            if (searchQuery.length > 0) {
+                clearSearchBtn.classList.remove('hidden');
+            } else {
+                clearSearchBtn.classList.add('hidden');
+            }
+            
+            renderProducts();
+        });
+
+        // Limpar a busca
+        clearSearchBtn.addEventListener('click', () => {
+            searchQuery = "";
+            searchInput.value = "";
+            clearSearchBtn.classList.add('hidden');
+            searchInput.focus();
+            renderProducts();
+        });
 
         // Obter categorias únicas
         const getCategories = () => {
             const categories = new Set();
             categories.add("Todos");
             
-            // Adiciona as categorias que tem produtos atrelados
             produtos.forEach(p => {
                 if(p.categoria) categories.add(p.categoria);
             });
@@ -187,8 +232,8 @@
                 
                 btn.onclick = () => {
                     currentCategory = cat;
-                    renderFilters(); // Atualiza cores dos botões
-                    renderProducts(); // Atualiza a grid
+                    renderFilters(); 
+                    renderProducts(); 
                 };
                 
                 filtersContainer.appendChild(btn);
@@ -219,13 +264,27 @@
 
         // Renderizar Produtos
         const renderProducts = () => {
-            // Filtrar
-            const filteredProducts = currentCategory === "Todos" 
+            // 1. Filtrar por Categoria
+            let filteredProducts = currentCategory === "Todos" 
                 ? produtos 
                 : produtos.filter(p => p.categoria === currentCategory);
 
+            // 2. Filtrar por Busca (se houver texto)
+            if (searchQuery !== "") {
+                const queryNormalized = normalizeString(searchQuery);
+                filteredProducts = filteredProducts.filter(p => {
+                    const titleNormalized = normalizeString(p.titulo);
+                    return titleNormalized.includes(queryNormalized);
+                });
+            }
+
             // Atualizar textos da página
-            pageTitle.textContent = currentCategory === "Todos" ? "Todas as Ofertas" : `Ofertas em ${currentCategory}`;
+            if (searchQuery !== "") {
+                pageTitle.textContent = `Resultados para "${searchQuery}"`;
+            } else {
+                pageTitle.textContent = currentCategory === "Todos" ? "Todas as Ofertas" : `Ofertas em ${currentCategory}`;
+            }
+            
             productsCount.textContent = `${filteredProducts.length} ${filteredProducts.length === 1 ? 'produto encontrado' : 'produtos encontrados'}`;
 
             // Estado vazio
@@ -243,7 +302,6 @@
             // Gerar HTML
             gridContainer.innerHTML = filteredProducts.map(produto => {
                 
-                // Formatação de Preços
                 let priceHtml = '';
                 if (produto.precoAntigoCortado) {
                     priceHtml += `<span class="text-xs text-gray-400 line-through decoration-gray-300">R$ ${produto.precoAntigoCortado}</span>`;
@@ -256,12 +314,10 @@
                     </div>
                 `;
 
-                // Formatação de Parcelamento
                 let parcelamentoHtml = produto.parcelamento 
                     ? `<p class="text-xs font-semibold text-green-600 mt-0.5"><i class="ph ph-credit-card mr-1"></i>${produto.parcelamento}</p>` 
                     : '<p class="text-xs text-gray-400 mt-0.5 h-4"></p>'; 
 
-                // Estrelas e Vendas
                 let ratingHtml = '';
                 if(produto.estrelas || produto.qtdVendas) {
                     ratingHtml = `<div class="flex items-center gap-2 text-xs text-gray-500 mb-2 mt-auto pt-3">`;
@@ -275,12 +331,10 @@
                     ratingHtml += `</div>`;
                 }
 
-                // Lógica da Imagem com Proxy para burlar Hotlink
+                // Proxy de imagens
                 let imgSrc = "https://placehold.co/400x400/f3f4f6/a1a1aa?text=Sem+Foto";
                 if (produto.linkImagem) {
-                    // Remove o protocolo para usar o wsrv.nl corretamente
                     const cleanUrl = produto.linkImagem.replace(/^https?:\/\//, '');
-                    // Adiciona w=400 (largura) para otimizar o carregamento
                     imgSrc = `https://wsrv.nl/?url=${cleanUrl}&w=400&output=webp`;
                 }
 
