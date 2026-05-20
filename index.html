@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Compara Preço Brasil | As Melhores Ofertas</title>
-    
-    <meta name="referrer" content="no-referrer">
-    
+
+    <meta name="referrer" content="no-referrer" />
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
+    <!-- Fonte -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    />
+
+    <!-- Ícones -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <script>
@@ -20,53 +26,89 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ["Inter", "sans-serif"],
                     },
                     colors: {
                         brand: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                        }
-                    }
-                }
-            }
-        }
+                            50: "#eff6ff",
+                            100: "#dbeafe",
+                            500: "#3b82f6",
+                            600: "#2563eb",
+                            700: "#1d4ed8",
+                        },
+                    },
+                },
+            },
+        };
     </script>
 
     <style>
-        /* Custom Scrollbar for categories */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        /* Scroll invisível */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
         .no-scrollbar {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
-        
-        /* Line clamp for titles */
+
+        /* Clamp título */
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;  
+            -webkit-box-orient: vertical;
             overflow: hidden;
+        }
+
+        /* Skeleton loading */
+        .skeleton {
+            background: linear-gradient(
+                90deg,
+                #f3f4f6 25%,
+                #e5e7eb 50%,
+                #f3f4f6 75%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
         }
     </style>
 </head>
+
 <body class="bg-gray-50 text-gray-800 antialiased min-h-screen flex flex-col">
 
+    <!-- HEADER -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <div class="flex-shrink-0 flex items-center gap-2">
-                    <div class="bg-brand-600 text-white p-1.5 rounded-lg">
+                <div class="flex items-center gap-2">
+                    <div class="bg-brand-600 text-white p-2 rounded-xl">
                         <i class="ph ph-shopping-cart text-xl"></i>
                     </div>
-                    <span class="font-bold text-xl tracking-tight text-gray-900">Compara Preço <span class="text-2xl">🇧🇷</span></span>
+
+                    <span class="font-bold text-xl tracking-tight text-gray-900">
+                        Compara Preço 🇧🇷
+                    </span>
                 </div>
-                <div class="hidden sm:flex items-center gap-2 text-sm text-green-600 font-medium bg-green-50 px-3 py-1 rounded-full border border-green-100">
+
+                <div class="hidden sm:flex items-center gap-2 text-sm text-green-600 font-medium bg-green-50 px-4 py-2 rounded-full border border-green-100">
                     <i class="ph-fill ph-shield-check text-lg"></i>
                     Ofertas Verificadas
                 </div>
@@ -74,302 +116,662 @@
         </div>
     </header>
 
-    <div class="bg-white border-b border-gray-200 shadow-sm z-40 relative">
+    <!-- CATEGORIAS -->
+    <div class="bg-white border-b border-gray-200 sticky top-16 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex space-x-2 overflow-x-auto py-3 no-scrollbar" id="category-filters">
-                </div>
+
+            <div class="relative">
+
+                <!-- Fade esquerda -->
+                <div class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+
+                <!-- Fade direita -->
+                <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+
+                <div
+                    id="category-filters"
+                    class="flex gap-2 overflow-x-auto py-3 no-scrollbar snap-x snap-mandatory scroll-smooth"
+                ></div>
+
+            </div>
         </div>
     </div>
 
+    <!-- MAIN -->
     <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
+
+        <!-- BUSCA -->
         <div class="mb-8 relative max-w-2xl mx-auto">
+
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <i class="ph ph-magnifying-glass text-gray-400 text-xl"></i>
             </div>
-            <input 
-                type="text" 
-                id="search-input" 
-                class="block w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-2xl leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 sm:text-base transition-all shadow-sm hover:shadow-md" 
+
+            <input
+                type="text"
+                id="search-input"
                 placeholder="Busque por produtos, marcas, modelos..."
                 autocomplete="off"
+                class="block w-full pl-12 pr-12 py-3.5 border border-gray-200 rounded-2xl bg-white shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+            />
+
+            <button
+                id="clear-search"
+                class="absolute inset-y-0 right-0 pr-4 hidden items-center text-gray-400 hover:text-gray-700"
             >
-            <button id="clear-search" class="absolute inset-y-0 right-0 pr-4 flex items-center hidden text-gray-400 hover:text-gray-600 transition-colors">
                 <i class="ph-fill ph-x-circle text-xl"></i>
             </button>
+
         </div>
 
-        <div class="mb-6 flex justify-between items-end">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900" id="page-title">Todas as Ofertas</h1>
-                <p class="text-sm text-gray-500 mt-1" id="products-count">Carregando...</p>
-            </div>
+        <!-- HEADER LISTA -->
+        <div class="mb-6">
+            <h1 id="page-title" class="text-2xl font-bold text-gray-900">
+                Todas as Ofertas
+            </h1>
+
+            <p id="products-count" class="text-sm text-gray-500 mt-1">
+                Carregando...
+            </p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6" id="product-grid">
-            </div>
-        
-        <div id="empty-state" class="hidden flex-col items-center justify-center py-20 text-center">
+        <!-- GRID -->
+        <div
+            id="product-grid"
+            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
+        ></div>
+
+        <!-- EMPTY -->
+        <div
+            id="empty-state"
+            class="hidden flex-col items-center justify-center py-20 text-center"
+        >
             <i class="ph ph-magnifying-glass text-6xl text-gray-300 mb-4"></i>
-            <h3 class="text-lg font-medium text-gray-900">Nenhuma oferta encontrada</h3>
-            <p class="text-gray-500 mt-1" id="empty-state-message">Tente buscar com outros termos ou selecione outra categoria.</p>
+
+            <h3 class="text-lg font-medium text-gray-900">
+                Nenhuma oferta encontrada
+            </h3>
+
+            <p class="text-gray-500 mt-1">
+                Tente buscar com outros termos.
+            </p>
+        </div>
+
+        <!-- LOAD MORE -->
+        <div class="flex justify-center mt-10">
+            <button
+                id="load-more-btn"
+                class="hidden bg-brand-600 hover:bg-brand-700 text-white font-bold px-6 py-3 rounded-2xl transition-all shadow-lg hover:scale-105"
+            >
+                Carregar mais
+            </button>
         </div>
 
     </main>
 
+    <!-- FOOTER -->
     <footer class="bg-white border-t border-gray-200 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="md:flex md:items-center md:justify-between text-center md:text-left">
+
                 <div class="flex justify-center md:justify-start items-center gap-2 mb-4 md:mb-0">
                     <i class="ph-fill ph-tag text-brand-600 text-xl"></i>
-                    <span class="font-bold text-gray-900">Compara Preço Brasil</span>
+
+                    <span class="font-bold text-gray-900">
+                        Compara Preço Brasil
+                    </span>
                 </div>
+
                 <p class="text-sm text-gray-500">
-                    &copy; 2026. Todos os direitos reservados. Os preços podem sofrer alterações no site oficial.
+                    © 2026. Todos os direitos reservados.
                 </p>
+
             </div>
         </div>
-        <img src="https://tracker-email-tau.vercel.app/api/imagem?t=comparaBrasil" width="1" height="1" style="display:none !important;" />
     </footer>
 
     <script>
-        // Estado da aplicação
+
+        // =========================
+        // ESTADO
+        // =========================
+
         let produtos = [];
+
         let currentCategory = "Todos";
-        let searchQuery = ""; // Armazena a busca atual
 
-        // DOM Elements
-        const gridContainer = document.getElementById('product-grid');
-        const filtersContainer = document.getElementById('category-filters');
-        const pageTitle = document.getElementById('page-title');
-        const productsCount = document.getElementById('products-count');
-        const emptyState = document.getElementById('empty-state');
-        const searchInput = document.getElementById('search-input');
-        const clearSearchBtn = document.getElementById('clear-search');
+        let searchQuery = "";
 
-        // Carregar dados do arquivo JSON
-        const carregarProdutos = async () => {
-            try {
-                const response = await fetch('p.json');
-                if (!response.ok) throw new Error('Falha ao carregar o arquivo p.json');
-                
-                const data = await response.json();
-                
-                // Filtra apenas links Meli.la e remove dados sensíveis
-                produtos = data
-                    .filter(p => p.linkCurtoAfiliado && p.linkCurtoAfiliado.startsWith('https://meli.la/'))
-                    .map(p => {
-                        delete p.comissaoPorcentagem;
-                        delete p.lucroReaisComZeros;
-                        return p;
-                    });
+        let itemsPerLoad = 12;
 
-                renderFilters();
-                renderProducts();
-            } catch (error) {
-                console.error('Erro:', error);
-                productsCount.textContent = "Erro ao carregar produtos.";
-                gridContainer.innerHTML = '<div class="col-span-full text-center text-red-500 py-10 bg-red-50 rounded-xl border border-red-200">Não foi possível carregar as ofertas. <br><br>Verifique se o arquivo <b>p.json</b> está na mesma pasta.</div>';
-            }
-        };
+        let currentVisible = 12;
 
-        // Função utilitária para normalizar strings (remove acentos e deixa minúsculo)
+
+        // =========================
+        // DOM
+        // =========================
+
+        const gridContainer = document.getElementById("product-grid");
+
+        const filtersContainer = document.getElementById("category-filters");
+
+        const pageTitle = document.getElementById("page-title");
+
+        const productsCount = document.getElementById("products-count");
+
+        const emptyState = document.getElementById("empty-state");
+
+        const searchInput = document.getElementById("search-input");
+
+        const clearSearchBtn = document.getElementById("clear-search");
+
+        const loadMoreBtn = document.getElementById("load-more-btn");
+
+
+        // =========================
+        // NORMALIZAR TEXTO
+        // =========================
+
         const normalizeString = (str) => {
             if (!str) return "";
-            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
+            return str
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .trim();
         };
 
-        // Lidar com a busca
-        searchInput.addEventListener('input', (e) => {
-            searchQuery = e.target.value;
-            
-            // Mostrar/Ocultar botão de limpar
-            if (searchQuery.length > 0) {
-                clearSearchBtn.classList.remove('hidden');
-            } else {
-                clearSearchBtn.classList.add('hidden');
-            }
-            
-            renderProducts();
-        });
 
-        // Limpar a busca
-        clearSearchBtn.addEventListener('click', () => {
-            searchQuery = "";
-            searchInput.value = "";
-            clearSearchBtn.classList.add('hidden');
-            searchInput.focus();
-            renderProducts();
-        });
+        // =========================
+        // REMOVER DUPLICADOS
+        // =========================
 
-        // Obter categorias únicas
-        const getCategories = () => {
-            const categories = new Set();
-            categories.add("Todos");
-            
-            produtos.forEach(p => {
-                if(p.categoria) categories.add(p.categoria);
+        const removeDuplicados = (array) => {
+
+            const mapa = new Map();
+
+            array.forEach((produto) => {
+
+                if (
+                    produto.linkCurtoAfiliado &&
+                    produto.linkCurtoAfiliado.startsWith("https://meli.la/")
+                ) {
+
+                    mapa.set(produto.linkCurtoAfiliado, produto);
+                }
             });
 
-            return Array.from(categories);
+            return [...mapa.values()];
         };
 
-        // Renderizar botões de filtro
+
+        // =========================
+        // CARREGAR PRODUTOS
+        // =========================
+
+        const carregarProdutos = async () => {
+
+            try {
+
+                mostrarSkeleton();
+
+                const response = await fetch("p.json");
+
+                if (!response.ok) {
+                    throw new Error("Erro ao carregar p.json");
+                }
+
+                const data = await response.json();
+
+                produtos = removeDuplicados(data).map((p) => {
+
+                    delete p.comissaoPorcentagem;
+                    delete p.lucroReaisComZeros;
+
+                    return p;
+                });
+
+                renderFilters();
+
+                renderProducts();
+
+            } catch (error) {
+
+                console.error(error);
+
+                gridContainer.innerHTML = `
+                    <div class="col-span-full bg-red-50 border border-red-200 rounded-2xl p-10 text-center text-red-600">
+                        Erro ao carregar produtos.
+                    </div>
+                `;
+            }
+        };
+
+
+        // =========================
+        // SKELETON
+        // =========================
+
+        const mostrarSkeleton = () => {
+
+            let skeletons = "";
+
+            for (let i = 0; i < 8; i++) {
+
+                skeletons += `
+                    <div class="bg-white rounded-2xl p-4 border border-gray-100">
+
+                        <div class="skeleton h-44 rounded-xl mb-4"></div>
+
+                        <div class="skeleton h-4 rounded mb-2"></div>
+
+                        <div class="skeleton h-4 rounded w-2/3 mb-4"></div>
+
+                        <div class="skeleton h-6 rounded w-1/2"></div>
+
+                    </div>
+                `;
+            }
+
+            gridContainer.innerHTML = skeletons;
+        };
+
+
+        // =========================
+        // CATEGORIAS
+        // =========================
+
+        const getCategories = () => {
+
+            const categories = new Set();
+
+            categories.add("Todos");
+
+            produtos.forEach((p) => {
+
+                if (p.categoria) {
+                    categories.add(p.categoria);
+                }
+            });
+
+            return [...categories];
+        };
+
+
+        // =========================
+        // RENDER FILTROS
+        // =========================
+
         const renderFilters = () => {
+
             const categories = getCategories();
-            filtersContainer.innerHTML = '';
-            
-            categories.forEach(cat => {
-                const btn = document.createElement('button');
+
+            filtersContainer.innerHTML = "";
+
+            categories.forEach((cat) => {
+
+                const btn = document.createElement("button");
+
                 const isActive = currentCategory === cat;
-                
-                btn.className = `whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 border ${
-                    isActive 
-                    ? 'bg-brand-600 text-white border-brand-600 shadow-md transform scale-105' 
-                    : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
-                }`;
+
+                btn.className = `
+                    snap-start
+                    flex-shrink-0
+                    whitespace-nowrap
+                    px-5
+                    py-2
+                    rounded-full
+                    text-sm
+                    font-semibold
+                    transition-all
+                    duration-200
+                    border
+                    ${
+                        isActive
+                            ? "bg-brand-600 text-white border-brand-600 shadow-md scale-105"
+                            : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:border-gray-300"
+                    }
+                `;
+
                 btn.textContent = cat;
-                
+
                 btn.onclick = () => {
+
                     currentCategory = cat;
-                    renderFilters(); 
-                    renderProducts(); 
+
+                    currentVisible = itemsPerLoad;
+
+                    renderFilters();
+
+                    renderProducts();
                 };
-                
+
                 filtersContainer.appendChild(btn);
             });
         };
 
-        // Formatar o badge de destaque
+
+        // =========================
+        // BADGES
+        // =========================
+
         const getBadgeHtml = (destaque, desconto) => {
-            let badges = '';
-            
+
+            let badges = "";
+
             if (destaque) {
+
                 let bgClass = "bg-orange-500";
-                if(destaque.includes("IMPERDÍVEL")) bgClass = "bg-purple-600";
-                
-                badges += `<span class="${bgClass} text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1 w-max">
-                    <i class="ph-fill ph-star"></i> ${destaque}
-                </span>`;
+
+                if (destaque.includes("IMPERDÍVEL")) {
+                    bgClass = "bg-purple-600";
+                }
+
+                badges += `
+                    <span class="${bgClass} text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1 w-max">
+                        <i class="ph-fill ph-star"></i>
+                        ${destaque}
+                    </span>
+                `;
             }
-            
+
             if (desconto) {
-                badges += `<span class="bg-green-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm w-max">
-                    ↓ ${desconto}
-                </span>`;
+
+                badges += `
+                    <span class="bg-green-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm w-max">
+                        ↓ ${desconto}
+                    </span>
+                `;
             }
-            
-            return badges ? `<div class="absolute top-3 left-3 flex flex-col gap-1.5 z-10">${badges}</div>` : '';
+
+            return badges
+                ? `
+                    <div class="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+                        ${badges}
+                    </div>
+                `
+                : "";
         };
 
-        // Renderizar Produtos
-        const renderProducts = () => {
-            // 1. Filtrar por Categoria
-            let filteredProducts = currentCategory === "Todos" 
-                ? produtos 
-                : produtos.filter(p => p.categoria === currentCategory);
 
-            // 2. Filtrar por Busca (se houver texto)
+        // =========================
+        // LOAD MORE
+        // =========================
+
+        const loadMoreProducts = () => {
+
+            currentVisible += itemsPerLoad;
+
+            renderProducts();
+        };
+
+        loadMoreBtn.addEventListener("click", loadMoreProducts);
+
+
+        // =========================
+        // BUSCA
+        // =========================
+
+        searchInput.addEventListener("input", (e) => {
+
+            searchQuery = e.target.value;
+
+            currentVisible = itemsPerLoad;
+
+            if (searchQuery.length > 0) {
+
+                clearSearchBtn.classList.remove("hidden");
+                clearSearchBtn.classList.add("flex");
+
+            } else {
+
+                clearSearchBtn.classList.add("hidden");
+                clearSearchBtn.classList.remove("flex");
+            }
+
+            renderProducts();
+        });
+
+
+        clearSearchBtn.addEventListener("click", () => {
+
+            searchQuery = "";
+
+            searchInput.value = "";
+
+            currentVisible = itemsPerLoad;
+
+            clearSearchBtn.classList.add("hidden");
+
+            renderProducts();
+        });
+
+
+        // =========================
+        // RENDER PRODUTOS
+        // =========================
+
+        const renderProducts = () => {
+
+            let filteredProducts =
+                currentCategory === "Todos"
+                    ? produtos
+                    : produtos.filter(
+                          (p) => p.categoria === currentCategory
+                      );
+
             if (searchQuery !== "") {
-                const queryNormalized = normalizeString(searchQuery);
-                filteredProducts = filteredProducts.filter(p => {
-                    const titleNormalized = normalizeString(p.titulo);
-                    return titleNormalized.includes(queryNormalized);
+
+                const query = normalizeString(searchQuery);
+
+                filteredProducts = filteredProducts.filter((p) => {
+
+                    const title = normalizeString(p.titulo);
+
+                    return title.includes(query);
                 });
             }
 
-            // Atualizar textos da página
+            // TÍTULO
+
             if (searchQuery !== "") {
+
                 pageTitle.textContent = `Resultados para "${searchQuery}"`;
-            } else {
-                pageTitle.textContent = currentCategory === "Todos" ? "Todas as Ofertas" : `Ofertas em ${currentCategory}`;
-            }
-            
-            productsCount.textContent = `${filteredProducts.length} ${filteredProducts.length === 1 ? 'produto encontrado' : 'produtos encontrados'}`;
 
-            // Estado vazio
+            } else {
+
+                pageTitle.textContent =
+                    currentCategory === "Todos"
+                        ? "Todas as Ofertas"
+                        : `Ofertas em ${currentCategory}`;
+            }
+
+            productsCount.textContent =
+                `${filteredProducts.length} produtos encontrados`;
+
+            // EMPTY
+
             if (filteredProducts.length === 0) {
-                gridContainer.classList.add('hidden');
-                emptyState.classList.remove('hidden');
-                emptyState.classList.add('flex');
+
+                gridContainer.classList.add("hidden");
+
+                emptyState.classList.remove("hidden");
+
+                emptyState.classList.add("flex");
+
                 return;
+
             } else {
-                gridContainer.classList.remove('hidden');
-                emptyState.classList.add('hidden');
-                emptyState.classList.remove('flex');
+
+                gridContainer.classList.remove("hidden");
+
+                emptyState.classList.add("hidden");
+
+                emptyState.classList.remove("flex");
             }
 
-            // Gerar HTML
-            gridContainer.innerHTML = filteredProducts.map(produto => {
-                
-                let priceHtml = '';
-                if (produto.precoAntigoCortado) {
-                    priceHtml += `<span class="text-xs text-gray-400 line-through decoration-gray-300">R$ ${produto.precoAntigoCortado}</span>`;
-                }
-                
-                priceHtml += `
-                    <div class="flex items-baseline gap-1">
-                        <span class="text-sm font-semibold text-gray-900">R$</span>
-                        <span class="text-2xl font-extrabold text-gray-900 tracking-tight">${produto.precoAtual}</span>
-                    </div>
-                `;
+            // PAGINAÇÃO
 
-                let parcelamentoHtml = produto.parcelamento 
-                    ? `<p class="text-xs font-semibold text-green-600 mt-0.5"><i class="ph ph-credit-card mr-1"></i>${produto.parcelamento}</p>` 
-                    : '<p class="text-xs text-gray-400 mt-0.5 h-4"></p>'; 
+            const visibleProducts = filteredProducts.slice(
+                0,
+                currentVisible
+            );
 
-                let ratingHtml = '';
-                if(produto.estrelas || produto.qtdVendas) {
-                    ratingHtml = `<div class="flex items-center gap-2 text-xs text-gray-500 mb-2 mt-auto pt-3">`;
-                    if(produto.estrelas) {
-                        ratingHtml += `<div class="flex items-center text-yellow-500 font-bold"><i class="ph-fill ph-star mr-1"></i>${produto.estrelas}</div>`;
-                    }
-                    if(produto.estrelas && produto.qtdVendas) ratingHtml += `<span class="text-gray-300">|</span>`;
-                    if(produto.qtdVendas) {
-                        ratingHtml += `<span>${produto.qtdVendas}</span>`;
-                    }
-                    ratingHtml += `</div>`;
-                }
+            // GRID
 
-                // Proxy de imagens
-                let imgSrc = "https://placehold.co/400x400/f3f4f6/a1a1aa?text=Sem+Foto";
+            gridContainer.innerHTML = visibleProducts.map((produto) => {
+
+                let imgSrc =
+                    "https://placehold.co/400x400/f3f4f6/a1a1aa?text=Sem+Foto";
+
                 if (produto.linkImagem) {
-                    const cleanUrl = produto.linkImagem.replace(/^https?:\/\//, '');
+
+                    const cleanUrl = produto.linkImagem.replace(
+                        /^https?:\/\//,
+                        ""
+                    );
+
                     imgSrc = `https://wsrv.nl/?url=${cleanUrl}&w=400&output=webp`;
                 }
 
                 return `
-                    <a href="${produto.linkCurtoAfiliado}" target="_blank" rel="noopener noreferrer" class="group bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full relative cursor-pointer block hover:-translate-y-1">
-                        
-                        ${getBadgeHtml(produto.tagDestaque, produto.descontoSite)}
-                        
-                        <div class="w-full bg-white rounded-xl mb-4 p-2 flex items-center justify-center overflow-hidden h-48">
-                            <img src="${imgSrc}" referrerpolicy="no-referrer" alt="${produto.titulo}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" loading="lazy" onerror="this.src='https://placehold.co/400x400/f3f4f6/a1a1aa?text=Imagem+Indisponível'" />
+                    <a
+                        href="${produto.linkCurtoAfiliado}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="group bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full relative hover:-translate-y-1"
+                    >
+
+                        ${getBadgeHtml(
+                            produto.tagDestaque,
+                            produto.descontoSite
+                        )}
+
+                        <div class="w-full bg-white rounded-xl mb-4 p-2 flex items-center justify-center overflow-hidden h-44 sm:h-48">
+
+                            <img
+                                src="${imgSrc}"
+                                alt="${produto.titulo}"
+                                referrerpolicy="no-referrer"
+                                loading="lazy"
+                                fetchpriority="low"
+                                decoding="async"
+                                class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                                onerror="this.src='https://placehold.co/400x400/f3f4f6/a1a1aa?text=Imagem+Indisponível'"
+                            />
+
                         </div>
-                        
-                        <h3 class="text-sm font-medium text-gray-800 leading-tight line-clamp-2 mb-1 group-hover:text-brand-600 transition-colors" title="${produto.titulo}">
+
+                        <h3 class="text-sm font-medium text-gray-800 leading-tight line-clamp-2 mb-2 group-hover:text-brand-600 transition-colors">
                             ${produto.titulo}
                         </h3>
-                        
-                        ${ratingHtml}
-                        
-                        <div class="mt-1 flex flex-col">
-                            ${priceHtml}
-                            ${parcelamentoHtml}
+
+                        <div class="mt-auto">
+
+                            ${
+                                produto.estrelas || produto.qtdVendas
+                                    ? `
+                                    <div class="flex items-center gap-2 text-xs text-gray-500 mb-2">
+
+                                        ${
+                                            produto.estrelas
+                                                ? `
+                                                <div class="flex items-center text-yellow-500 font-bold">
+                                                    <i class="ph-fill ph-star mr-1"></i>
+                                                    ${produto.estrelas}
+                                                </div>
+                                            `
+                                                : ""
+                                        }
+
+                                        ${
+                                            produto.estrelas &&
+                                            produto.qtdVendas
+                                                ? `<span class="text-gray-300">|</span>`
+                                                : ""
+                                        }
+
+                                        ${
+                                            produto.qtdVendas
+                                                ? `<span>${produto.qtdVendas}</span>`
+                                                : ""
+                                        }
+
+                                    </div>
+                                `
+                                    : ""
+                            }
+
+                            ${
+                                produto.precoAntigoCortado
+                                    ? `
+                                        <span class="text-xs text-gray-400 line-through">
+                                            R$ ${produto.precoAntigoCortado}
+                                        </span>
+                                    `
+                                    : ""
+                            }
+
+                            <div class="flex items-baseline gap-1">
+
+                                <span class="text-sm font-semibold text-gray-900">
+                                    R$
+                                </span>
+
+                                <span class="text-2xl font-extrabold text-gray-900 tracking-tight">
+                                    ${produto.precoAtual}
+                                </span>
+
+                            </div>
+
+                            ${
+                                produto.parcelamento
+                                    ? `
+                                        <p class="text-xs font-semibold text-green-600 mt-1">
+                                            <i class="ph ph-credit-card mr-1"></i>
+                                            ${produto.parcelamento}
+                                        </p>
+                                    `
+                                    : ""
+                            }
+
+                            <button
+                                class="w-full mt-4 bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2"
+                            >
+                                Ver Oferta
+                                <i class="ph-bold ph-arrow-right"></i>
+                            </button>
+
                         </div>
-                        
-                        <button class="w-full mt-4 bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
-                            Ver Oferta <i class="ph-bold ph-arrow-right"></i>
-                        </button>
+
                     </a>
                 `;
-            }).join('');
+            }).join("");
+
+            // BOTÃO LOAD MORE
+
+            if (filteredProducts.length > currentVisible) {
+
+                loadMoreBtn.classList.remove("hidden");
+
+            } else {
+
+                loadMoreBtn.classList.add("hidden");
+            }
         };
 
-        // Inicializar
-        document.addEventListener('DOMContentLoaded', () => {
+
+        // =========================
+        // START
+        // =========================
+
+        document.addEventListener("DOMContentLoaded", () => {
+
             carregarProdutos();
         });
+
     </script>
+
 </body>
 </html>
