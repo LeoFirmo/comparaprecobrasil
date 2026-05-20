@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Compara Preço Brasil | As Melhores Ofertas</title>
 
     <meta name="referrer" content="no-referrer" />
@@ -10,15 +11,16 @@
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Fonte -->
+    <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet"
     />
 
-    <!-- Ícones -->
+    <!-- Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <script>
@@ -51,7 +53,7 @@
             overflow-x: hidden;
         }
 
-        /* Scroll invisível */
+        /* Remove scrollbar */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -61,7 +63,7 @@
             scrollbar-width: none;
         }
 
-        /* Clamp título */
+        /* Clamp */
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -69,7 +71,7 @@
             overflow: hidden;
         }
 
-        /* Skeleton loading */
+        /* Skeleton */
         .skeleton {
             background: linear-gradient(
                 90deg,
@@ -77,7 +79,9 @@
                 #e5e7eb 50%,
                 #f3f4f6 75%
             );
+
             background-size: 200% 100%;
+
             animation: shimmer 1.2s infinite;
         }
 
@@ -85,9 +89,23 @@
             0% {
                 background-position: 200% 0;
             }
+
             100% {
                 background-position: -200% 0;
             }
+        }
+
+        /* CATEGORY SCROLL */
+        #category-scroll {
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            width: 100%;
+        }
+
+        #category-scroll::-webkit-scrollbar {
+            display: none;
         }
     </style>
 </head>
@@ -96,9 +114,13 @@
 
     <!-- HEADER -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
             <div class="flex justify-between items-center h-16">
+
                 <div class="flex items-center gap-2">
+
                     <div class="bg-brand-600 text-white p-2 rounded-xl">
                         <i class="ph ph-shopping-cart text-xl"></i>
                     </div>
@@ -106,41 +128,56 @@
                     <span class="font-bold text-xl tracking-tight text-gray-900">
                         Compara Preço 🇧🇷
                     </span>
+
                 </div>
 
                 <div class="hidden sm:flex items-center gap-2 text-sm text-green-600 font-medium bg-green-50 px-4 py-2 rounded-full border border-green-100">
+
                     <i class="ph-fill ph-shield-check text-lg"></i>
+
                     Ofertas Verificadas
+
                 </div>
+
             </div>
+
         </div>
+
     </header>
 
     <!-- CATEGORIAS -->
-    <div class="bg-white border-b border-gray-200 sticky top-16 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white border-b border-gray-200 sticky top-16 z-40 overflow-hidden">
 
-            <div class="relative">
+        <div class="relative">
 
-                <!-- Fade esquerda -->
-                <div class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+            <!-- Fade esquerda -->
+            <div class="absolute left-0 top-0 bottom-0 w-10 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
 
-                <!-- Fade direita -->
-                <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+            <!-- Fade direita -->
+            <div class="absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
 
+            <!-- SCROLL -->
+            <div
+                id="category-scroll"
+                class="w-full"
+            >
+
+                <!-- FLEX -->
                 <div
                     id="category-filters"
-                    class="flex gap-2 overflow-x-auto py-3 no-scrollbar snap-x snap-mandatory scroll-smooth"
+                    class="inline-flex gap-2 px-4 sm:px-6 lg:px-8 py-3 min-w-max"
                 ></div>
 
             </div>
+
         </div>
+
     </div>
 
     <!-- MAIN -->
     <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        <!-- BUSCA -->
+        <!-- SEARCH -->
         <div class="mb-8 relative max-w-2xl mx-auto">
 
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -150,8 +187,8 @@
             <input
                 type="text"
                 id="search-input"
-                placeholder="Busque por produtos, marcas, modelos..."
                 autocomplete="off"
+                placeholder="Busque por produtos, marcas, modelos..."
                 class="block w-full pl-12 pr-12 py-3.5 border border-gray-200 rounded-2xl bg-white shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
             />
 
@@ -164,15 +201,23 @@
 
         </div>
 
-        <!-- HEADER LISTA -->
+        <!-- TITLE -->
         <div class="mb-6">
-            <h1 id="page-title" class="text-2xl font-bold text-gray-900">
+
+            <h1
+                id="page-title"
+                class="text-2xl font-bold text-gray-900"
+            >
                 Todas as Ofertas
             </h1>
 
-            <p id="products-count" class="text-sm text-gray-500 mt-1">
+            <p
+                id="products-count"
+                class="text-sm text-gray-500 mt-1"
+            >
                 Carregando...
             </p>
+
         </div>
 
         <!-- GRID -->
@@ -186,6 +231,7 @@
             id="empty-state"
             class="hidden flex-col items-center justify-center py-20 text-center"
         >
+
             <i class="ph ph-magnifying-glass text-6xl text-gray-300 mb-4"></i>
 
             <h3 class="text-lg font-medium text-gray-900">
@@ -195,31 +241,38 @@
             <p class="text-gray-500 mt-1">
                 Tente buscar com outros termos.
             </p>
+
         </div>
 
         <!-- LOAD MORE -->
         <div class="flex justify-center mt-10">
+
             <button
                 id="load-more-btn"
                 class="hidden bg-brand-600 hover:bg-brand-700 text-white font-bold px-6 py-3 rounded-2xl transition-all shadow-lg hover:scale-105"
             >
                 Carregar mais
             </button>
+
         </div>
 
     </main>
 
     <!-- FOOTER -->
     <footer class="bg-white border-t border-gray-200 mt-auto">
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
             <div class="md:flex md:items-center md:justify-between text-center md:text-left">
 
                 <div class="flex justify-center md:justify-start items-center gap-2 mb-4 md:mb-0">
+
                     <i class="ph-fill ph-tag text-brand-600 text-xl"></i>
 
                     <span class="font-bold text-gray-900">
                         Compara Preço Brasil
                     </span>
+
                 </div>
 
                 <p class="text-sm text-gray-500">
@@ -227,14 +280,16 @@
                 </p>
 
             </div>
+
         </div>
+
     </footer>
 
     <script>
 
-        // =========================
+        // ====================================
         // ESTADO
-        // =========================
+        // ====================================
 
         let produtos = [];
 
@@ -247,9 +302,9 @@
         let currentVisible = 12;
 
 
-        // =========================
+        // ====================================
         // DOM
-        // =========================
+        // ====================================
 
         const gridContainer = document.getElementById("product-grid");
 
@@ -268,11 +323,12 @@
         const loadMoreBtn = document.getElementById("load-more-btn");
 
 
-        // =========================
-        // NORMALIZAR TEXTO
-        // =========================
+        // ====================================
+        // NORMALIZE
+        // ====================================
 
         const normalizeString = (str) => {
+
             if (!str) return "";
 
             return str
@@ -283,9 +339,9 @@
         };
 
 
-        // =========================
-        // REMOVER DUPLICADOS
-        // =========================
+        // ====================================
+        // REMOVE DUPLICADOS
+        // ====================================
 
         const removeDuplicados = (array) => {
 
@@ -306,9 +362,38 @@
         };
 
 
-        // =========================
-        // CARREGAR PRODUTOS
-        // =========================
+        // ====================================
+        // SKELETON
+        // ====================================
+
+        const mostrarSkeleton = () => {
+
+            let skeletons = "";
+
+            for (let i = 0; i < 8; i++) {
+
+                skeletons += `
+                    <div class="bg-white rounded-2xl p-4 border border-gray-100">
+
+                        <div class="skeleton h-44 rounded-xl mb-4"></div>
+
+                        <div class="skeleton h-4 rounded mb-2"></div>
+
+                        <div class="skeleton h-4 rounded w-2/3 mb-4"></div>
+
+                        <div class="skeleton h-6 rounded w-1/2"></div>
+
+                    </div>
+                `;
+            }
+
+            gridContainer.innerHTML = skeletons;
+        };
+
+
+        // ====================================
+        // LOAD JSON
+        // ====================================
 
         const carregarProdutos = async () => {
 
@@ -349,38 +434,9 @@
         };
 
 
-        // =========================
-        // SKELETON
-        // =========================
-
-        const mostrarSkeleton = () => {
-
-            let skeletons = "";
-
-            for (let i = 0; i < 8; i++) {
-
-                skeletons += `
-                    <div class="bg-white rounded-2xl p-4 border border-gray-100">
-
-                        <div class="skeleton h-44 rounded-xl mb-4"></div>
-
-                        <div class="skeleton h-4 rounded mb-2"></div>
-
-                        <div class="skeleton h-4 rounded w-2/3 mb-4"></div>
-
-                        <div class="skeleton h-6 rounded w-1/2"></div>
-
-                    </div>
-                `;
-            }
-
-            gridContainer.innerHTML = skeletons;
-        };
-
-
-        // =========================
+        // ====================================
         // CATEGORIAS
-        // =========================
+        // ====================================
 
         const getCategories = () => {
 
@@ -399,9 +455,9 @@
         };
 
 
-        // =========================
-        // RENDER FILTROS
-        // =========================
+        // ====================================
+        // FILTROS
+        // ====================================
 
         const renderFilters = () => {
 
@@ -416,20 +472,20 @@
                 const isActive = currentCategory === cat;
 
                 btn.className = `
-                    snap-start
                     flex-shrink-0
                     whitespace-nowrap
                     px-5
-                    py-2
+                    py-2.5
                     rounded-full
                     text-sm
                     font-semibold
                     transition-all
                     duration-200
                     border
+                    select-none
                     ${
                         isActive
-                            ? "bg-brand-600 text-white border-brand-600 shadow-md scale-105"
+                            ? "bg-brand-600 text-white border-brand-600 shadow-lg"
                             : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:border-gray-300"
                     }
                 `;
@@ -452,9 +508,9 @@
         };
 
 
-        // =========================
+        // ====================================
         // BADGES
-        // =========================
+        // ====================================
 
         const getBadgeHtml = (destaque, desconto) => {
 
@@ -495,9 +551,9 @@
         };
 
 
-        // =========================
+        // ====================================
         // LOAD MORE
-        // =========================
+        // ====================================
 
         const loadMoreProducts = () => {
 
@@ -509,9 +565,9 @@
         loadMoreBtn.addEventListener("click", loadMoreProducts);
 
 
-        // =========================
-        // BUSCA
-        // =========================
+        // ====================================
+        // SEARCH
+        // ====================================
 
         searchInput.addEventListener("input", (e) => {
 
@@ -548,9 +604,9 @@
         });
 
 
-        // =========================
+        // ====================================
         // RENDER PRODUTOS
-        // =========================
+        // ====================================
 
         const renderProducts = () => {
 
@@ -573,7 +629,7 @@
                 });
             }
 
-            // TÍTULO
+            // TITULO
 
             if (searchQuery !== "") {
 
@@ -749,7 +805,7 @@
                 `;
             }).join("");
 
-            // BOTÃO LOAD MORE
+            // LOAD MORE
 
             if (filteredProducts.length > currentVisible) {
 
@@ -762,9 +818,9 @@
         };
 
 
-        // =========================
+        // ====================================
         // START
-        // =========================
+        // ====================================
 
         document.addEventListener("DOMContentLoaded", () => {
 
