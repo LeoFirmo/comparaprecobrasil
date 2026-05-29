@@ -2,52 +2,27 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Compara Preço Brasil | As Melhores Ofertas</title>
-
     <meta name="referrer" content="no-referrer" />
 
-    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    />
-
-    <!-- Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <script>
-
         tailwind.config = {
-
             theme: {
-
                 extend: {
-
                     fontFamily: {
                         sans: ["Inter", "sans-serif"],
                     },
-
                     colors: {
-
                         brand: {
-
                             50: "#eff6ff",
                             100: "#dbeafe",
                             500: "#3b82f6",
@@ -58,319 +33,168 @@
                 },
             },
         };
-
     </script>
 
     <style>
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            overflow-x: hidden;
-        }
+        html { scroll-behavior: smooth; }
+        body { overflow-x: hidden; }
 
         /* Remove scrollbar */
-
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
+        .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
 
         /* Clamp */
-
         .line-clamp-2 {
             display: -webkit-box;
-
             -webkit-line-clamp: 2;
-
             -webkit-box-orient: vertical;
-
             overflow: hidden;
         }
 
         /* Skeleton */
-
         .skeleton {
-
-            background: linear-gradient(
-                90deg,
-                #f3f4f6 25%,
-                #e5e7eb 50%,
-                #f3f4f6 75%
-            );
-
+            background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
             background-size: 200% 100%;
-
             animation: shimmer 1.2s infinite;
         }
 
         @keyframes shimmer {
-
-            0% {
-                background-position: 200% 0;
-            }
-
-            100% {
-                background-position: -200% 0;
-            }
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         /* CATEGORY */
-
         #category-scroll {
-
             overflow-x: auto;
-
             overflow-y: hidden;
-
             -webkit-overflow-scrolling: touch;
-
             scroll-behavior: smooth;
-
             cursor: grab;
-
             user-select: none;
         }
 
-        #category-scroll.dragging {
-            cursor: grabbing;
-        }
-
-        #category-scroll::-webkit-scrollbar {
-            display: none;
-        }
-
-        #category-scroll {
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
+        #category-scroll.dragging { cursor: grabbing; }
+        #category-scroll::-webkit-scrollbar { display: none; }
+        #category-scroll { scrollbar-width: none; -ms-overflow-style: none; }
     </style>
 </head>
 
 <body class="bg-gray-50 text-gray-800 antialiased min-h-screen flex flex-col">
 
-    <!-- HEADER -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
-
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
             <div class="flex justify-between items-center h-16">
-
                 <div class="flex items-center gap-2">
-
                     <div class="bg-brand-600 text-white p-2 rounded-xl">
-
                         <i class="ph ph-shopping-cart text-xl"></i>
-
                     </div>
-
                     <span class="font-bold text-xl tracking-tight text-gray-900">
                         Compara Preço 🇧🇷
                     </span>
-
                 </div>
-
                 <div class="hidden sm:flex items-center gap-2 text-sm text-green-600 font-medium bg-green-50 px-4 py-2 rounded-full border border-green-100">
-
                     <i class="ph-fill ph-shield-check text-lg"></i>
-
                     Ofertas Verificadas
-
                 </div>
-
             </div>
-
         </div>
-
     </header>
 
-    <!-- CATEGORIAS -->
     <div class="bg-white border-b border-gray-200 sticky top-16 z-40">
-
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-            <div
-                id="category-scroll"
-                class="py-3 no-scrollbar"
-            >
-
-                <div
-                    id="category-filters"
-                    class="flex gap-2 w-max"
-                ></div>
-
+            <div id="category-scroll" class="py-3 no-scrollbar">
+                <div id="category-filters" class="flex gap-2 w-max"></div>
             </div>
-
         </div>
-
     </div>
 
-    <!-- MAIN -->
     <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        <!-- SEARCH -->
         <div class="mb-8 relative max-w-2xl mx-auto">
-
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-
                 <i class="ph ph-magnifying-glass text-gray-400 text-xl"></i>
-
             </div>
-
             <input
                 type="text"
                 id="search-input"
                 autocomplete="off"
-                placeholder="Busque por produtos, marcas, modelos..."
+                placeholder="Busque por ID (ex: 23), produtos, marcas..."
                 class="block w-full pl-12 pr-12 py-3.5 border border-gray-200 rounded-2xl bg-white shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
             />
-
             <button
                 id="clear-search"
                 class="absolute inset-y-0 right-0 pr-4 hidden items-center text-gray-400 hover:text-gray-700"
             >
                 <i class="ph-fill ph-x-circle text-xl"></i>
             </button>
-
         </div>
 
-        <!-- TITLE -->
         <div class="mb-6">
-
-            <h1
-                id="page-title"
-                class="text-2xl font-bold text-gray-900"
-            >
-                Todas as Ofertas
-            </h1>
-
-            <p
-                id="products-count"
-                class="text-sm text-gray-500 mt-1"
-            >
-                Carregando...
-            </p>
-
+            <h1 id="page-title" class="text-2xl font-bold text-gray-900">Todas as Ofertas</h1>
+            <p id="products-count" class="text-sm text-gray-500 mt-1">Carregando...</p>
         </div>
 
-        <!-- GRID -->
-        <div
-            id="product-grid"
-            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
-        ></div>
+        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"></div>
 
-        <!-- EMPTY -->
-        <div
-            id="empty-state"
-            class="hidden flex-col items-center justify-center py-20 text-center"
-        >
-
+        <div id="empty-state" class="hidden flex-col items-center justify-center py-20 text-center">
             <i class="ph ph-magnifying-glass text-6xl text-gray-300 mb-4"></i>
-
-            <h3 class="text-lg font-medium text-gray-900">
-                Nenhuma oferta encontrada
-            </h3>
-
-            <p class="text-gray-500 mt-1">
-                Tente buscar com outros termos.
-            </p>
-
+            <h3 class="text-lg font-medium text-gray-900">Nenhuma oferta encontrada</h3>
+            <p class="text-gray-500 mt-1">Tente buscar com outros termos ou verifique o código numérico.</p>
         </div>
 
-        <!-- LOAD MORE -->
         <div class="flex justify-center mt-10">
-
             <button
                 id="load-more-btn"
                 class="hidden bg-brand-600 hover:bg-brand-700 text-white font-bold px-6 py-3 rounded-2xl transition-all shadow-lg hover:scale-105"
             >
                 Carregar mais
             </button>
-
         </div>
         <img src="https://tracker-email-tau.vercel.app/api/imagem?t=Organico_comparaprecobrasil" width="1" height="1" style="display:none;" />
     </main>
 
-    <!-- FOOTER -->
     <footer class="bg-white border-t border-gray-200 mt-auto">
-
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
             <div class="md:flex md:items-center md:justify-between text-center md:text-left">
-
                 <div class="flex justify-center md:justify-start items-center gap-2 mb-4 md:mb-0">
-
                     <i class="ph-fill ph-tag text-brand-600 text-xl"></i>
-
-                    <span class="font-bold text-gray-900">
-                        Compara Preço Brasil
-                    </span>
-
+                    <span class="font-bold text-gray-900">Compara Preço Brasil</span>
                 </div>
-
-                <p class="text-sm text-gray-500">
-                    © 2026. Todos os direitos reservados.
-                </p>
-
+                <p class="text-sm text-gray-500">© 2026. Todos os direitos reservados.</p>
             </div>
-
         </div>
-
     </footer>
 
     <script>
-
         // ====================================
         // ESTADO
         // ====================================
-
         let produtos = [];
-
         let currentCategory = "Todos";
-
         let searchQuery = "";
-
         let itemsPerLoad = 12;
-
         let currentVisible = 12;
-
 
         // ====================================
         // DOM
         // ====================================
-
         const gridContainer = document.getElementById("product-grid");
-
         const filtersContainer = document.getElementById("category-filters");
-
         const pageTitle = document.getElementById("page-title");
-
         const productsCount = document.getElementById("products-count");
-
         const emptyState = document.getElementById("empty-state");
-
         const searchInput = document.getElementById("search-input");
-
         const clearSearchBtn = document.getElementById("clear-search");
-
         const loadMoreBtn = document.getElementById("load-more-btn");
-
 
         // ====================================
         // NORMALIZE
         // ====================================
-
         const normalizeString = (str) => {
-
             if (!str) return "";
-
             return str
                 .normalize("NFD")
                 .replace(/[\u0300-\u036f]/g, "")
@@ -378,93 +202,60 @@
                 .trim();
         };
 
-
         // ====================================
         // REMOVE DUPLICADOS
         // ====================================
-
         const removeDuplicados = (array) => {
-
             const mapa = new Map();
-
             array.forEach((produto) => {
-
                 if (
                     produto.linkCurtoAfiliado &&
                     produto.linkCurtoAfiliado.startsWith("https://meli.la/")
                 ) {
-
                     mapa.set(produto.linkCurtoAfiliado, produto);
                 }
             });
-
             return [...mapa.values()];
         };
-
 
         // ====================================
         // SKELETON
         // ====================================
-
         const mostrarSkeleton = () => {
-
             let skeletons = "";
-
             for (let i = 0; i < 8; i++) {
-
                 skeletons += `
                     <div class="bg-white rounded-2xl p-4 border border-gray-100">
-
                         <div class="skeleton h-44 rounded-xl mb-4"></div>
-
                         <div class="skeleton h-4 rounded mb-2"></div>
-
                         <div class="skeleton h-4 rounded w-2/3 mb-4"></div>
-
                         <div class="skeleton h-6 rounded w-1/2"></div>
-
                     </div>
                 `;
             }
-
             gridContainer.innerHTML = skeletons;
         };
-
 
         // ====================================
         // LOAD JSON
         // ====================================
-
         const carregarProdutos = async () => {
-
             try {
-
                 mostrarSkeleton();
-
                 const response = await fetch("p.json");
-
                 if (!response.ok) {
                     throw new Error("Erro ao carregar p.json");
                 }
-
                 const data = await response.json();
-
                 produtos = removeDuplicados(data).map((p) => {
-
                     delete p.comissaoPorcentagem;
                     delete p.lucroReaisComZeros;
-
                     return p;
                 });
-
                 renderFilters();
-
                 renderProducts();
-
             } catch (error) {
-
                 console.error(error);
-
                 gridContainer.innerHTML = `
                     <div class="col-span-full bg-red-50 border border-red-200 rounded-2xl p-10 text-center text-red-600">
                         Erro ao carregar produtos.
@@ -473,264 +264,163 @@
             }
         };
 
-
         // ====================================
         // CATEGORIAS
         // ====================================
-
         const getCategories = () => {
-
             const categories = new Set();
-
             categories.add("Todos");
-
             produtos.forEach((p) => {
-
                 if (p.categoria) {
                     categories.add(p.categoria);
                 }
             });
-
             return [...categories];
         };
-
 
         // ====================================
         // FILTROS
         // ====================================
-
         const renderFilters = () => {
-
             const categories = getCategories();
-
             filtersContainer.innerHTML = "";
-
             categories.forEach((cat) => {
-
                 const btn = document.createElement("button");
-
                 const isActive = currentCategory === cat;
-
                 btn.className = `
-                    flex-shrink-0
-                    whitespace-nowrap
-                    px-5
-                    py-2.5
-                    rounded-full
-                    text-sm
-                    font-semibold
-                    transition-all
-                    duration-200
-                    border
-                    select-none
-                    active:scale-95
-                    ${
-                        isActive
-                            ? "bg-brand-600 text-white border-brand-600 shadow-lg"
-                            : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50 hover:border-gray-300"
-                    }
+                    flex-shrink-0 whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 border select-none active:scale-95
+                    ${isActive ? "bg-brand-600 text-white border-brand-600 shadow-lg" : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50 hover:border-gray-300"}
                 `;
-
                 btn.textContent = cat;
-
                 btn.onclick = () => {
-
                     currentCategory = cat;
-
                     currentVisible = itemsPerLoad;
-
                     renderFilters();
-
                     renderProducts();
                 };
-
                 filtersContainer.appendChild(btn);
             });
         };
 
-
         // ====================================
         // BADGES
         // ====================================
-
         const getBadgeHtml = (destaque, desconto) => {
-
             let badges = "";
-
             if (destaque) {
-
                 let bgClass = "bg-orange-500";
-
-                if (destaque.includes("IMPERDÍVEL")) {
-                    bgClass = "bg-purple-600";
-                }
-
+                if (destaque.includes("IMPERDÍVEL")) { bgClass = "bg-purple-600"; }
                 badges += `
                     <span class="${bgClass} text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1 w-max">
-                        <i class="ph-fill ph-star"></i>
-                        ${destaque}
+                        <i class="ph-fill ph-star"></i> ${destaque}
                     </span>
                 `;
             }
-
             if (desconto) {
-
                 badges += `
                     <span class="bg-green-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm w-max">
                         ↓ ${desconto}
                     </span>
                 `;
             }
-
-            return badges
-                ? `
-                    <div class="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-                        ${badges}
-                    </div>
-                `
-                : "";
+            return badges ? `<div class="absolute top-3 left-3 flex flex-col gap-1.5 z-10">${badges}</div>` : "";
         };
-
 
         // ====================================
         // LOAD MORE
         // ====================================
-
         const loadMoreProducts = () => {
-
             currentVisible += itemsPerLoad;
-
             renderProducts();
         };
-
         loadMoreBtn.addEventListener("click", loadMoreProducts);
-
 
         // ====================================
         // SEARCH
         // ====================================
-
         searchInput.addEventListener("input", (e) => {
-
-            searchQuery = e.target.value;
-
+            searchQuery = e.target.value.trim();
             currentVisible = itemsPerLoad;
-
             if (searchQuery.length > 0) {
-
                 clearSearchBtn.classList.remove("hidden");
                 clearSearchBtn.classList.add("flex");
-
             } else {
-
                 clearSearchBtn.classList.add("hidden");
                 clearSearchBtn.classList.remove("flex");
             }
-
             renderProducts();
         });
-
 
         clearSearchBtn.addEventListener("click", () => {
-
             searchQuery = "";
-
             searchInput.value = "";
-
             currentVisible = itemsPerLoad;
-
             clearSearchBtn.classList.add("hidden");
-
             renderProducts();
         });
-
 
         // ====================================
         // RENDER PRODUTOS
         // ====================================
-
         const renderProducts = () => {
-
-            let filteredProducts =
-                currentCategory === "Todos"
-                    ? produtos
-                    : produtos.filter(
-                          (p) => p.categoria === currentCategory
-                      );
+            let filteredProducts = currentCategory === "Todos"
+                ? produtos
+                : produtos.filter((p) => p.categoria === currentCategory);
 
             if (searchQuery !== "") {
+                // NOVA LÓGICA DE BUSCA: Verifica se a query é 100% numérica
+                const isNumeric = /^\d+$/.test(searchQuery);
 
-                const query = normalizeString(searchQuery);
-
-                filteredProducts = filteredProducts.filter((p) => {
-
-                    const title = normalizeString(p.titulo);
-
-                    return title.includes(query);
-                });
+                if (isNumeric) {
+                    // Busca exata pelo ID
+                    filteredProducts = filteredProducts.filter((p) => String(p.id) === searchQuery);
+                } else {
+                    // Busca por texto (título) normal
+                    const query = normalizeString(searchQuery);
+                    filteredProducts = filteredProducts.filter((p) => {
+                        const title = normalizeString(p.titulo);
+                        return title.includes(query);
+                    });
+                }
             }
 
             // TITULO
-
             if (searchQuery !== "") {
-
-                pageTitle.textContent = `Resultados para "${searchQuery}"`;
-
+                const isNumeric = /^\d+$/.test(searchQuery);
+                pageTitle.textContent = isNumeric ? `Buscando código #${searchQuery}` : `Resultados para "${searchQuery}"`;
             } else {
-
-                pageTitle.textContent =
-                    currentCategory === "Todos"
-                        ? "Todas as Ofertas"
-                        : `Ofertas em ${currentCategory}`;
+                pageTitle.textContent = currentCategory === "Todos" ? "Todas as Ofertas" : `Ofertas em ${currentCategory}`;
             }
 
-            productsCount.textContent =
-                `${filteredProducts.length} produtos encontrados`;
+            productsCount.textContent = `${filteredProducts.length} produtos encontrados`;
 
             // EMPTY
-
             if (filteredProducts.length === 0) {
-
                 gridContainer.classList.add("hidden");
-
                 emptyState.classList.remove("hidden");
-
                 emptyState.classList.add("flex");
-
                 return;
-
             } else {
-
                 gridContainer.classList.remove("hidden");
-
                 emptyState.classList.add("hidden");
-
                 emptyState.classList.remove("flex");
             }
 
             // PAGINAÇÃO
-
-            const visibleProducts = filteredProducts.slice(
-                0,
-                currentVisible
-            );
+            const visibleProducts = filteredProducts.slice(0, currentVisible);
 
             // GRID
-
             gridContainer.innerHTML = visibleProducts.map((produto) => {
-
-                let imgSrc =
-                    "https://placehold.co/400x400/f3f4f6/a1a1aa?text=Sem+Foto";
-
+                let imgSrc = "https://placehold.co/400x400/f3f4f6/a1a1aa?text=Sem+Foto";
                 if (produto.linkImagem) {
-
-                    const cleanUrl = produto.linkImagem.replace(
-                        /^https?:\/\//,
-                        ""
-                    );
-
+                    const cleanUrl = produto.linkImagem.replace(/^https?:\/\//, "");
                     imgSrc = `https://wsrv.nl/?url=${cleanUrl}&w=400&output=webp`;
                 }
+
+                // ID TAG (NOVO: Mostra o ID visualmente no card para ajudar o usuário)
+                const idTag = produto.id 
+                    ? `<div class="absolute top-3 right-3 bg-gray-900 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm z-10">#${produto.id}</div>` 
+                    : "";
 
                 return `
                     <a
@@ -739,14 +429,10 @@
                         rel="noopener noreferrer"
                         class="group bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full relative hover:-translate-y-1"
                     >
-
-                        ${getBadgeHtml(
-                            produto.tagDestaque,
-                            produto.descontoSite
-                        )}
+                        ${getBadgeHtml(produto.tagDestaque, produto.descontoSite)}
+                        ${idTag}
 
                         <div class="w-full bg-white rounded-xl mb-4 p-2 flex items-center justify-center overflow-hidden h-44 sm:h-48">
-
                             <img
                                 src="${imgSrc}"
                                 alt="${produto.titulo}"
@@ -757,7 +443,6 @@
                                 class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                                 onerror="this.src='https://placehold.co/400x400/f3f4f6/a1a1aa?text=Imagem+Indisponível'"
                             />
-
                         </div>
 
                         <h3 class="text-sm font-medium text-gray-800 leading-tight line-clamp-2 mb-2 group-hover:text-brand-600 transition-colors">
@@ -765,161 +450,89 @@
                         </h3>
 
                         <div class="mt-auto">
+                            ${produto.estrelas || produto.qtdVendas ? `
+                                <div class="flex items-center gap-2 text-xs text-gray-500 mb-2">
+                                    ${produto.estrelas ? `
+                                        <div class="flex items-center text-yellow-500 font-bold">
+                                            <i class="ph-fill ph-star mr-1"></i> ${produto.estrelas}
+                                        </div>
+                                    ` : ""}
+                                    ${produto.estrelas && produto.qtdVendas ? `<span class="text-gray-300">|</span>` : ""}
+                                    ${produto.qtdVendas ? `<span>${produto.qtdVendas}</span>` : ""}
+                                </div>
+                            ` : ""}
 
-                            ${
-                                produto.estrelas || produto.qtdVendas
-                                    ? `
-                                    <div class="flex items-center gap-2 text-xs text-gray-500 mb-2">
-
-                                        ${
-                                            produto.estrelas
-                                                ? `
-                                                <div class="flex items-center text-yellow-500 font-bold">
-                                                    <i class="ph-fill ph-star mr-1"></i>
-                                                    ${produto.estrelas}
-                                                </div>
-                                            `
-                                                : ""
-                                        }
-
-                                        ${
-                                            produto.estrelas &&
-                                            produto.qtdVendas
-                                                ? `<span class="text-gray-300">|</span>`
-                                                : ""
-                                        }
-
-                                        ${
-                                            produto.qtdVendas
-                                                ? `<span>${produto.qtdVendas}</span>`
-                                                : ""
-                                        }
-
-                                    </div>
-                                `
-                                    : ""
-                            }
-
-                            ${
-                                produto.precoAntigoCortado
-                                    ? `
-                                        <span class="text-xs text-gray-400 line-through">
-                                            R$ ${produto.precoAntigoCortado}
-                                        </span>
-                                    `
-                                    : ""
-                            }
+                            ${produto.precoAntigoCortado ? `
+                                <span class="text-xs text-gray-400 line-through">
+                                    R$ ${produto.precoAntigoCortado}
+                                </span>
+                            ` : ""}
 
                             <div class="flex items-baseline gap-1">
-
-                                <span class="text-sm font-semibold text-gray-900">
-                                    R$
-                                </span>
-
-                                <span class="text-2xl font-extrabold text-gray-900 tracking-tight">
-                                    ${produto.precoAtual}
-                                </span>
-
+                                <span class="text-sm font-semibold text-gray-900">R$</span>
+                                <span class="text-2xl font-extrabold text-gray-900 tracking-tight">${produto.precoAtual}</span>
                             </div>
 
-                            ${
-                                produto.parcelamento
-                                    ? `
-                                        <p class="text-xs font-semibold text-green-600 mt-1">
-                                            <i class="ph ph-credit-card mr-1"></i>
-                                            ${produto.parcelamento}
-                                        </p>
-                                    `
-                                    : ""
-                            }
+                            ${produto.parcelamento ? `
+                                <p class="text-xs font-semibold text-green-600 mt-1">
+                                    <i class="ph ph-credit-card mr-1"></i> ${produto.parcelamento}
+                                </p>
+                            ` : ""}
 
-                            <button
-                                class="w-full mt-4 bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2"
-                            >
-                                Ver Oferta
-                                <i class="ph-bold ph-arrow-right"></i>
+                            <button class="w-full mt-4 bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                                Ver Oferta <i class="ph-bold ph-arrow-right"></i>
                             </button>
-
                         </div>
-
                     </a>
                 `;
             }).join("");
 
-            // LOAD MORE
-
             if (filteredProducts.length > currentVisible) {
-
                 loadMoreBtn.classList.remove("hidden");
-
             } else {
-
                 loadMoreBtn.classList.add("hidden");
             }
         };
 
-
         // ====================================
         // DRAG SCROLL CATEGORIAS
         // ====================================
-
         const slider = document.getElementById("category-scroll");
-
         let isDown = false;
-
         let startX;
-
         let scrollLeft;
 
         slider.addEventListener("mousedown", (e) => {
-
             isDown = true;
-
             slider.classList.add("dragging");
-
             startX = e.pageX - slider.offsetLeft;
-
             scrollLeft = slider.scrollLeft;
         });
 
         slider.addEventListener("mouseleave", () => {
-
             isDown = false;
-
             slider.classList.remove("dragging");
         });
 
         slider.addEventListener("mouseup", () => {
-
             isDown = false;
-
             slider.classList.remove("dragging");
         });
 
         slider.addEventListener("mousemove", (e) => {
-
             if (!isDown) return;
-
             e.preventDefault();
-
             const x = e.pageX - slider.offsetLeft;
-
             const walk = (x - startX) * 1.5;
-
             slider.scrollLeft = scrollLeft - walk;
         });
-
 
         // ====================================
         // START
         // ====================================
-
         document.addEventListener("DOMContentLoaded", () => {
-
             carregarProdutos();
         });
-
     </script>
-
 </body>
 </html>
