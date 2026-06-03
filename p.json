@@ -1,4 +1,21 @@
-[  {  
+[  
+      {
+        "id":42,
+        "titulo": "Celular Samsung Galaxy S25 Fe 5g, 128gb, 8gb Ram, Câmera Tripla De 50+12+8, Tela Grande De 6.7 Jetblack",
+        "categoria": "Celulares e Smartphones",
+        "tagDestaque": "MAIS VENDIDO",
+        "estrelas": "4.9",
+        "qtdVendas": "+10 mil vendidos",
+        "precoAntigoCortado": "4.499",
+        "precoAtual": "2.697,30",
+        "descontoSite": "40% OFF",
+        "parcelamento": "10x R$299,70 sem juros",
+        "comissaoPorcentagem": "",
+        "lucroReaisComZeros": "",
+        "linkCurtoAfiliado": "https://meli.la/297PEyr",
+        "linkImagem": "https://http2.mlstatic.com/D_NQ_NP_840870-MLA96785958150_112025-O.webp"
+      },
+      {  
       "id":23,
       "titulo": "Celular Xiaomi Redmi Note 13 8gb/256gb Verde Menta",
       "categoria": "Smartphones",
